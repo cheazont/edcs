@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 
-from config_reader.load_transport_config_files import read_transport_config
+from config_reader.load_transport_config_files import read_transport_configs
+from sql_functions.transport_sql_functions import create_transport_tables
+from sql_functions.transport_sql_functions import fill_transport_tables
 import sqlite3
+import sys
 
-conn = sqlite3.connect(":memory:")
+conn = sqlite3.connect("test.sqlite")
 cursor = conn.cursor()
 
-read_transport_config("test_transport.json",cursor)
+create_transport_tables(conn, cursor)
+fill_transport_tables(conn, cursor)
+if len(sys.argv)>1:
+    read_transport_configs(sys.argv[1],conn,cursor)
